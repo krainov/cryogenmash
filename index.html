@@ -1,0 +1,605 @@
+<!doctype html>
+<html lang="ru" ng-app="app">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title></title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="apple-touch-icon" href="apple-touch-icon.png">
+        <link rel="stylesheet" href="css/normalize.css">
+        <link rel="stylesheet" href="css/bootstrap.min.css">
+        <link rel="stylesheet" href="css/main.css">
+        <script src="js/angular.min.js"></script>
+        <script src="js/angular-route.min.js"></script>
+        <script src="js/angular-resource.min.js"></script>
+        <script src="js/jquery-2.1.4.min.js"></script>
+        <script src="js/app.js"></script>
+        <base href="">
+    </head>
+    <body ng-controller="MainCtrl as panel">
+    	<header>
+    		<h1>Криогенмаш</h1>
+    	</header>
+		<ul class="nav nav-tabs">
+			<li class="col-xs-4" ng-class="{ 'selected' : panel.isSelected(1)}">
+                <a class="text-center" ng-click="panel.selectTab(1)">Газовый калькулятор</a>
+            </li>
+			<li class="col-xs-4" ng-class="{ 'selected' : panel.isSelected(2)}">
+                <a class="text-center" ng-click="panel.selectTab(2)">Таблица газов</a>
+            </li>
+			<li class="col-xs-4" ng-class="{ 'selected' : panel.isSelected(3)}">
+                <a class="text-center" ng-click="panel.selectTab(3)">Контакты</a>
+            </li>
+		</ul>
+    	<main>
+            <div ng-show="panel.isSelected(1)">
+                <div name="gas-calculate" id="gas-calculate">
+                    <!--div class="gas-ul">
+                        <div class="gas-ch" id="gas-o2"><span>02</span>Кислород</div>
+                        <div class="gas-ch" id="gas-n2"><span>N2</span>Азот</div>
+                        <div class="gas-ch" id="gas-air"><span>Air</span>Воздух</div>
+                        <div class="gas-ch" id="gas-ar"><span>Ar</span>Аргон</div>
+                        <div class="gas-ch" id="gas-h2"><span>H2</span>Водород</div>
+                        <div class="gas-ch" id="gas-he"><span>He</span>Гелий</div>
+                        <div class="gas-ch" id="gas-xe"><span>Xe</span>Ксенон</div>
+                        <div class="gas-ch" id="gas-kr"><span>Kr</span>Криптон</div>
+                        <div class="gas-ch" id="gas-ne"><span>Ne</span>Неон</div>
+                        <div class="gas-ch" id="gas-o2"><span>Газ</span>природный</div>
+                    </div>
+                    <div class="clearfix"></div-->
+                    <div class="left-column gas-table">
+                        <div class="form-group">
+                            <div class="select-img"></div>
+                            <select name="choice-gas-2" class="form-control" id="choice-gas-2" ng-model="getGasCalc">
+                                <option value="">-- Выберите --</option>
+                                <option value="o2">Кислород, O2</option>
+                                <option value="n2">Азот, N2</option>
+                                <option value="air">Воздух</option>
+                                <option value="ar">Аргон, Ar</option>
+                                <option value="h2">Водород, H2</option>
+                                <option value="he">Гелий, He</option>
+                                <option value="xe">Ксенон, Xe</option>
+                                <option value="kr">Криптон, Kr</option>
+                                <option value="ne">Неон, Ne</option>
+                                <option value="gas">Природный газ</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <input name="mass" type="number" class="calculate form-control" id="mass" value="0" ng-change="calculate()" ng-model="mass" />
+                            <span class="mass-label in-label">Кг</span>
+                        </div>
+                        <div class="form-group temp-check text-center">
+                            <div class="radio">
+                                <label>
+                                    <input name="temperatura" type="radio" value="0" ng-model="temp" ng-change="calculate()" />
+                                    давление 760 мм рт.ст., температура 0&ordm; С&nbsp;&nbsp;
+                                </label>
+                            </div>
+                            <div class="radio">
+                                <label>
+                                    <input name="temperatura" type="radio" value="20" ng-model="temp" ng-change="calculate()" />
+                                    давление 760 мм рт.ст., температура 20&ordm; С
+                                </label>
+                            </div>
+                        </div>
+                        <h3 class="res-title text-center">Результат:</h3>
+                        <div class="form-group">
+                            <input name="liquid" disabled class="calculate form-control" id="liquid" ng-model="resultL" value="" />
+                            <span class="mass-label in-label in-label-res">Литры</span> 
+                        </div>
+                        <div class="form-group">
+                            <input name="gas" disabled class="calculate form-control" id="gas" ng-model="result" value="" />
+                            <span class="mass-label in-label in-label-res">м3</span> 
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div ng-show="panel.isSelected(2)">
+                <div class="gas-table">
+                    <div class="form-group">
+                        <div class="select-img"></div>
+                        <select name="choice-gas" class="form-control" id="choice-gas" ng-model="getGas">
+                            <option value="">-- Выберите --</option>
+                            <option value="o2">Кислород, O2</option>
+                            <option value="n2">Азот, N2</option>
+                            <option value="air">Воздух</option>
+                            <option value="ar">Аргон, Ar</option>
+                            <option value="h2">Водород, H2</option>
+                            <option value="he">Гелий, He</option>
+                            <option value="xe">Ксенон, Xe</option>
+                            <option value="kr">Криптон, Kr</option>
+                            <option value="ne">Неон, Ne</option>
+                            <option value="gas">Природный газ</option>
+                        </select>
+                    </div>
+                    <table class="t-o2" ng-show="getGas=='o2'">
+                        <thead>
+                            <tr>
+                                <th colspan="2">Жидкий</th>
+                                <th colspan="2">Газообразный</th>
+                            </tr>
+                            <tr>
+                                <th>Кг</th>
+                                <th>Л</th>
+                                <th>при 0 C</th>
+                                <th>при 20 C</th>               
+                            </tr>           
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>1</td>
+                                <td>0.863</td>
+                                <td>0.709</td>
+                                <td>0.752</td>
+                            </tr>
+                            <tr>
+                                <td>1.14</td>
+                                <td>1</td>
+                                <td>0.808</td>
+                                <td>0.857</td>
+                            </tr>
+                            <tr>
+                                <td>1.428</td>
+                                <td>1.232</td>
+                                <td>1</td>
+                                <td>1.073</td>
+                            </tr>
+                            <tr>
+                                <td>1.33</td>
+                                <td>1.148</td>
+                                <td>0.932</td>
+                                <td>1</td>
+                            </tr>                                   
+                        </tbody>
+                    </table>
+
+                    <table class="t-n2" ng-show="getGas=='n2'">
+                        <thead>
+                            <tr>
+                                <th colspan="2">Жидкий</th>
+                                <th colspan="2">Газообразный</th>
+                            </tr>
+                            <tr>
+                                <th>Кг</th>
+                                <th>Л</th>
+                                <th>при 0 C</th>
+                                <th>при 20 C</th>               
+                            </tr>           
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>1</td>
+                                <td>1.241</td>
+                                <td>0.81</td>
+                                <td>0.86</td>
+                            </tr>
+                            <tr>
+                                <td>0.806</td>
+                                <td>1</td>
+                                <td>0.653</td>
+                                <td>0.693</td>
+                            </tr>
+                            <tr>
+                                <td>1.250</td>
+                                <td>1.551</td>
+                                <td>1</td>
+                                <td>1.073</td>
+                            </tr>
+                            <tr>
+                                <td>1.165</td>
+                                <td>1.146</td>
+                                <td>0.932</td>
+                                <td>1</td>
+                            </tr>                                   
+                        </tbody>
+                    </table>
+
+                    <table class="t-air" ng-show="getGas=='air'">
+                        <thead>
+                            <tr>
+                                <th colspan="2">Жидкий</th>
+                                <th colspan="2">Газообразный</th>
+                            </tr>
+                            <tr>
+                                <th>Кг</th>
+                                <th>Л</th>
+                                <th>при 0 C</th>
+                                <th>при 20 C</th>               
+                            </tr>           
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>1</td>
+                                <td>1.042</td>
+                                <td>0.773</td>
+                                <td>0.83</td>
+                            </tr>
+                            <tr>
+                                <td>0.873</td>
+                                <td>1</td>
+                                <td>0.675</td>
+                                <td>0.724</td>
+                            </tr>
+                            <tr>
+                                <td>1.293</td>
+                                <td>1.48</td>
+                                <td>1</td>
+                                <td>1.073</td>
+                            </tr>
+                            <tr>
+                                <td>1.205</td>
+                                <td>1.38</td>
+                                <td>0.932</td>
+                                <td>1</td>
+                            </tr>                                   
+                        </tbody>
+                    </table>
+
+                    <table class="t-ar" ng-show="getGas=='ar'">
+                        <thead>
+                            <tr>
+                                <th colspan="2">Жидкий</th>
+                                <th colspan="2">Газообразный</th>
+                            </tr>
+                            <tr>
+                                <th>Кг</th>
+                                <th>Л</th>
+                                <th>при 0 C</th>
+                                <th>при 20 C</th>               
+                            </tr>           
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>1</td>
+                                <td>0.717</td>
+                                <td>0.561</td>
+                                <td>0.602</td>
+                            </tr>
+                            <tr>
+                                <td>1.395</td>
+                                <td>1</td>
+                                <td>0.783</td>
+                                <td>0.84</td>
+                            </tr>
+                            <tr>
+                                <td>1.782</td>
+                                <td>1.278</td>
+                                <td>1</td>
+                                <td>1.073</td>
+                            </tr>
+                            <tr>
+                                <td>1.661</td>
+                                <td>1.191</td>
+                                <td>0.932</td>
+                                <td>1</td>
+                            </tr>                                   
+                        </tbody>
+                    </table>
+
+                    <table class="t-h2" ng-show="getGas=='h2'">
+                        <thead>
+                            <tr>
+                                <th colspan="2">Жидкий</th>
+                                <th colspan="2">Газообразный</th>
+                            </tr>
+                            <tr>
+                                <th>Кг</th>
+                                <th>Л</th>
+                                <th>при 0 C</th>
+                                <th>при 20 C</th>               
+                            </tr>           
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>1</td>
+                                <td>14.059</td>
+                                <td>11.27</td>
+                                <td>12.048</td>
+                            </tr>
+                            <tr>
+                                <td>0.071</td>
+                                <td>1</td>
+                                <td>0.8</td>
+                                <td>0.855</td>
+                            </tr>
+                            <tr>
+                                <td>0.09</td>
+                                <td>1.265</td>
+                                <td>1</td>
+                                <td>1.073</td>
+                            </tr>
+                            <tr>
+                                <td>0.084</td>
+                                <td>1.181</td>
+                                <td>0.932</td>
+                                <td>1</td>
+                            </tr>                                   
+                        </tbody>
+                    </table>
+
+                    <table class="t-he" ng-show="getGas=='he'">
+                        <thead>
+                            <tr>
+                                <th colspan="2">Жидкий</th>
+                                <th colspan="2">Газообразный</th>
+                            </tr>
+                            <tr>
+                                <th>Кг</th>
+                                <th>Л</th>
+                                <th>при 0 C</th>
+                                <th>при 20 C</th>               
+                            </tr>           
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>1</td>
+                                <td>7.993</td>
+                                <td>5.600</td>
+                                <td>6.01</td>
+                            </tr>
+                            <tr>
+                                <td>0.125</td>
+                                <td>1</td>
+                                <td>0.7</td>
+                                <td>0.751</td>
+                            </tr>
+                            <tr>
+                                <td>0.179</td>
+                                <td>1.431</td>
+                                <td>1</td>
+                                <td>1.073</td>
+                            </tr>
+                            <tr>
+                                <td>0.166</td>
+                                <td>1.327</td>
+                                <td>0.932</td>
+                                <td>1</td>
+                            </tr>                                   
+                        </tbody>
+                    </table>
+
+                    <table class="t-xe" ng-show="getGas=='xe'">
+                        <thead>
+                            <tr>
+                                <th colspan="2">Жидкий</th>
+                                <th colspan="2">Газообразный</th>
+                            </tr>
+                            <tr>
+                                <th>Кг</th>
+                                <th>Л</th>
+                                <th>при 0 C</th>
+                                <th>при 20 C</th>               
+                            </tr>           
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>1</td>
+                                <td>0.34</td>
+                                <td>0.172</td>
+                                <td>0.185</td>
+                            </tr>
+                            <tr>
+                                <td>2.941</td>
+                                <td>1</td>
+                                <td>0.506</td>
+                                <td>0.544</td>
+                            </tr>
+                            <tr>
+                                <td>5.858</td>
+                                <td>1.992</td>
+                                <td>1</td>
+                                <td>1.073</td>
+                            </tr>
+                            <tr>
+                                <td>5.458</td>
+                                <td>1.856</td>
+                                <td>0.932</td>
+                                <td>1</td>
+                            </tr>                                   
+                        </tbody>
+                    </table>
+
+                    <table class="t-kr" ng-show="getGas=='kr'">
+                        <thead>
+                            <tr>
+                                <th colspan="2">Жидкий</th>
+                                <th colspan="2">Газообразный</th>
+                            </tr>
+                            <tr>
+                                <th>Кг</th>
+                                <th>Л</th>
+                                <th>при 0 C</th>
+                                <th>при 20 C</th>               
+                            </tr>           
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>1</td>
+                                <td>0.414</td>
+                                <td>0.270</td>
+                                <td>0.29</td>
+                            </tr>
+                            <tr>
+                                <td>2.415</td>
+                                <td>1</td>
+                                <td>0.652</td>
+                                <td>0.7</td>
+                            </tr>
+                            <tr>
+                                <td>3.739</td>
+                                <td>1.548</td>
+                                <td>1</td>
+                                <td>1.073</td>
+                            </tr>
+                            <tr>
+                                <td>3.484</td>
+                                <td>1.442</td>
+                                <td>0.932</td>
+                                <td>1</td>
+                            </tr>                                   
+                        </tbody>
+                    </table>
+
+                    <table class="t-ne" ng-show="getGas=='ne'">
+                        <thead>
+                            <tr>
+                                <th colspan="2">Жидкий</th>
+                                <th colspan="2">Газообразный</th>
+                            </tr>
+                            <tr>
+                                <th>Кг</th>
+                                <th>Л</th>
+                                <th>при 0 C</th>
+                                <th>при 20 C</th>               
+                            </tr>           
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>1</td>
+                                <td>0.829</td>
+                                <td>1.125</td>
+                                <td>1.21</td>
+                            </tr>
+                            <tr>
+                                <td>1.206</td>
+                                <td>1</td>
+                                <td>1.357</td>
+                                <td>1.459</td>
+                            </tr>
+                            <tr>
+                                <td>0.9</td>
+                                <td>0.746</td>
+                                <td>1</td>
+                                <td>1.073</td>
+                            </tr>
+                            <tr>
+                                <td>0.839</td>
+                                <td>0.695</td>
+                                <td>0.932</td>
+                                <td>1</td>
+                            </tr>                                   
+                        </tbody>
+                    </table>            
+
+                    <table class="t-gas" ng-show="getGas=='gas'">
+                        <thead>
+                            <tr>
+                                <th colspan="2">Жидкий</th>
+                                <th colspan="2">Газообразный</th>
+                            </tr>
+                            <tr>
+                                <th>Кг</th>
+                                <th>Л</th>
+                                <th>при 0 C</th>
+                                <th>при 20 C</th>               
+                            </tr>           
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>1</td>
+                                <td>2.366</td>
+                                <td>1.394</td>
+                                <td>1.497</td>
+                            </tr>
+                            <tr>
+                                <td>0.423</td>
+                                <td>1</td>
+                                <td>0.589</td>
+                                <td>0.633</td>
+                            </tr>
+                            <tr>
+                                <td>0.716</td>
+                                <td>1.694</td>
+                                <td>1</td>
+                                <td>1.073</td>
+                            </tr>
+                            <tr>
+                                <td>0.667</td>
+                                <td>1.578</td>
+                                <td>0.932</td>
+                                <td>1</td>
+                            </tr>                                   
+                        </tbody>
+                    </table>
+
+                </div>
+            </div>
+            <div ng-show="panel.isSelected(3)">
+                <div class="contact">
+                    <h3>ПАО "Криогенмаш"</h3>
+                    <table>
+                        <tr>
+                            <td><strong>Адрес:</strong></td>
+                            <td>143907, Россия, Московская обл., г. Балашиха, пр. Ленина, д. 67</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Телефон:</strong></td>
+                            <td><a href="tel:(495) 505 93 33">(495) 505 93 33</a></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Факс:</strong></td>
+                            <td>(495) 521 57 22</td>
+                        </tr>
+                        <tr>
+                            <td><strong>E-mail:</td>
+                            <td><a href="mailto:root@cryogenmash.ru">root@cryogenmash.ru</a></td>
+                        </tr>
+                    </table>
+
+                    <h3>ООО "Криогаз"</h3>
+                    <table>
+                        <tr>
+                            <td><strong>Адрес:</strong></td>
+                            <td>143907, Россия, Московская обл., г. Балашиха, пр. Ленина, д. 67</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Телефон:</strong></td>
+                            <td><a href="tel:(495) 521 89 00">(495) 521 89 00</a></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Факс:</strong></td>
+                            <td>(495) 521 81 97</td>
+                        </tr>
+                    </table>
+
+                    <h3>ООО "Криогенмаш-Газ"</h3>
+                    <table>
+                        <tr>
+                            <td><strong>Адрес:</strong></td>
+                            <td>196650, Россия, СПб, Колпино, Ижорский завод, д. б/н</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Телефон:</strong></td>
+                            <td><a href="tel:(812) 322 88 56">(812) 322 88 56</a></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Факс:</strong></td>
+                            <td>(812) 322 88 56</td>
+                        </tr>
+                    </table>
+
+                    <h3>ОАО "Гипрокислород"</h3>
+                    <table>
+                        <tr>
+                            <td><strong>Адрес:</strong></td>
+                            <td>125315, Россия, 2-й Амбулаторный проезд, д. 8</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Телефон:</strong></td>
+                            <td><a href="tel:(495) 787 88 22">(495) 787 88 22</a>&nbsp;&nbsp;&nbsp;<a href="tel:(495) 152 03 29">(495) 152 03 29</a></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Факс:</strong></td>
+                            <td>(495) 152 41 80</td>
+                        </tr>
+                        <tr>
+                            <td><strong>E-mail:</td>
+                            <td><a href="mailto:info@giprokislorod.ru">info@giprokislorod.ru</a></td>
+                        </tr>
+                    </table>            
+                </div>
+            </div>                        
+    	</main>	
+    </body>
+</html>
